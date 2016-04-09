@@ -2,5 +2,6 @@
     "http": { 
 		"port": 8080,
 		"allowedOrigins": [ "http://localhost:80", "https://localhost:80"]
-	}
+	},
+    "secret": "yaselihama"
 }
