@@ -15,7 +15,7 @@ export class HttpServiceImpl implements HttpService {
     private express;
     private configService: ConfigService;
 
-    public constructor( @inject("ConfigService") configService) {
+    public constructor(@inject("ConfigService") configService) {
         this.express = express();
         this.configService = configService;
     }
