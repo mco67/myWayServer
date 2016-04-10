@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import { ConfigService } from "./configService";
-import { Express } from "express";
+import { Express, RequestHandler } from "express";
 import * as express from "express";
 import * as morgan from "morgan";
 import * as bodyParser from "body-parser";
@@ -8,6 +8,8 @@ import * as http from "http";
 
 export interface HttpService {
     start(): Promise<{}>;
+    
+    addGetRoute(...handler: RequestHandler[]);
     express: Express;
 }
 
