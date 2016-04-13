@@ -6,33 +6,35 @@ import * as morgan from "morgan";
 import * as bodyParser from "body-parser";
 import * as http from "http";
 
+
 export interface HttpService {
-    start(): Promise<{}>;
-    
-    addGetRoute(...handler: RequestHandler[]);
-    express: Express;
+    startRestServer(): Promise<{}>;
+    addGetRoute(path: string, ...handler: RequestHandler[]);
 }
+
 
 @injectable()
 export class HttpServiceImpl implements HttpService {
 
-    public express : Express;
-    private configService: ConfigService;
+    private express: Express;
 
-    public constructor(@inject("ConfigService") configService : ConfigService) {
-        this.express = express();
-        this.configService = configService;
-    }
-
-    public start(): Promise<{}> {
-        console.info('[HTTPSERVICE] Starting');
+    constructor( @inject("ConfigService") private configService: ConfigService) {
         this.configureExpress();
         this.configureCors();
-        return this.configureHttpServer();
+    }
+
+    public startRestServer(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            var server = http.createServer(this.express).listen(this.express.get('port'), (info) => {
+                console.info(`[HTTPSERVICE] -- REST server started on port ${this.express.get('port')}`);
+                resolve();
+            });
+        });
     }
 
     private configureExpress(): void {
-        console.info("[HTTPSERVICE] -- Configure express framework")
+        console.info("[HTTPSERVICE] -- Configure express framework");
+        this.express = express();
         this.express.set('port', this.configService.config.http.port);
         this.express.use(morgan('logger'));
         this.express.use(bodyParser.json());
@@ -54,13 +56,9 @@ export class HttpServiceImpl implements HttpService {
         });
     }
 
-    private configureHttpServer(): Promise<any> {
-        console.info(`[HTTPSERVICE] -- Start the REST server on port ${this.express.get('port')}`);
-        return new Promise((resolve, reject) => {
-            var server = http.createServer(this.express).listen(this.express.get('port'), (info) => {
-                console.info('[HTTPSERVICE] Started');
-                resolve();
-            });
-        });
+    public addGetRoute(path: string, ...handler: RequestHandler[]) {
+        this.express.get(path, ...handler);
     }
+
+
 } 

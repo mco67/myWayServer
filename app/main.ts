@@ -1,6 +1,7 @@
 
 import { injectable, inject } from "inversify";
 import { HttpService } from "./services/httpService";
+import { AuthService } from "./services/authService";
 
 export interface Main {
     start(): void;
@@ -9,23 +10,15 @@ export interface Main {
 @injectable()
 export class MainImpl implements Main {
 
-    private httpService: HttpService;
-
-    public constructor( @inject("HttpService") httpService) {
-        this.httpService = httpService;
+    public constructor(
+        @inject("HttpService") private httpService: HttpService,
+        @inject("AuthService") private authService: AuthService) {
     }
 
     public start(): void {
-        console.info('---------------------------------------------------------');
-        console.info('-- MyApp server                                        --');
-        console.info('---------------------------------------------------------');
-        console.info('[MAIN] Starting');
-
         // Start services
-        this.httpService.start()
-            .then(() => {
-                console.info('[MAIN] Started');
-            });
+        this.httpService.startRestServer();
+           
     }
 }
 
