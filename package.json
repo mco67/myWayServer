@@ -7,9 +7,13 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
+    "gulp-filelog": "^0.4.1",
+    "gulp-istanbul": "^0.10.4",
     "gulp-mocha": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^2.13.0",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "remap-istanbul": "^0.6.2"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
