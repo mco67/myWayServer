@@ -1,9 +1,9 @@
 import { injectable, inject } from "inversify";
 import { HttpService } from "./httpService";
-import { Express } from "express";
+import { Express, Request, Response, NextFunction } from "express";
 
 export interface AuthService {
-
+    getVersion(req: Request, res: Response, next: NextFunction) : any {
 }
 
 @injectable()
@@ -13,13 +13,11 @@ export class AuthServiceImpl implements AuthService {
         
     constructor(@inject("HttpService") httpService : HttpService) {
         this.httpService = httpService;
-        this.addVersionHandler();
+        this.httpService.addGetRoute('/api/version', this.getVersion); 
     }
  
-    private addVersionHandler() : void {
-        this.httpService.addGetRoute('/api/version', (req, res, next) => {
-	        res.status(200).send("Yes men").end();
-        });
-    }
+    public getVersion(req: Request, res: Response, next: NextFunction) : any {
+	    res.status(200).send("Yes men").end(); 
+    } 
          
 } 

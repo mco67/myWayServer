@@ -17,7 +17,7 @@ var tsProject = ts.createProject('./tsconfig.json');
 
 gulp.task('build', function () {
     return gulp.src('./app/**/*.ts', { base: '.' })
-        .pipe(filelog())
+        //.pipe(filelog())
         .pipe(sourcemaps.init())
         .pipe(ts(tsProject))
         .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
@@ -35,7 +35,7 @@ gulp.task('pre-test', function () {
 
 gulp.task('test', ['pre-test'], function () {
     //find test code - note use of 'base'
-    return gulp.src('./test/**/*.ts', { base: '.' })
+    return gulp.src(['./test/**/*.ts'], { base: '.' })
         // Transpile
         .pipe(ts(tsProject))
         // Flush to disk
@@ -50,7 +50,7 @@ gulp.task('test', ['pre-test'], function () {
 
 gulp.task('remap-istanbul', function () {
     return gulp.src('./coverage/coverage-final.json', { base: '.' })
-        .pipe(filelog())
+        //.pipe(filelog())
         .pipe(remapIstanbul({
             reports: {
                 'lcovonly': './coverage/remap/lcov.info',
@@ -63,7 +63,7 @@ gulp.task('remap-istanbul', function () {
 
 gulp.task('watch', function () {
     gulp.watch(['app/**/*.ts'], ['build']);
-    gulp.watch(['test/**/*.ts'], ['test', 'remap-istanbul']);
+    gulp.watch(['app/**/*.ts', 'test/**/*.ts'], ['test', 'remap-istanbul']);
 });
 
 

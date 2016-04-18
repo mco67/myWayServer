@@ -2,6 +2,7 @@
 
 import "reflect-metadata";
 import { Kernel } from "inversify";
+import { Express, Request, Response, NextFunction } from "express";
 import { AuthService, AuthServiceImpl } from "../../app/services/authService";
 import { HttpService } from "../../app/services/httpService";
 import { injectable, inject } from "inversify";
@@ -25,7 +26,18 @@ describe('AuthenticationService', function() {
         kernel.bind<AuthService>("AuthService").to(AuthServiceImpl).inSingletonScope();
         kernel.bind<HttpService>("HttpService").to(HttpServiceMock).inSingletonScope();
         var authService = kernel.get<AuthService>("AuthService");
-               
+        
+        // ARRANGE        
+        let req : Request;
+        let resp : Response;
+        let next: NextFunction;
+        
+        // ACT
+        authService.getVersion(req, resp, next);
+        
+        // ASSERT
+         
+              
     });
   });
 }); 
