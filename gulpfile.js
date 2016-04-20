@@ -14,7 +14,6 @@ var filelog = require('gulp-filelog');
 // Load config
 var tsProject = ts.createProject('./tsconfig.json');
 
-
 gulp.task('build', function () {
     return gulp.src('./app/**/*.ts', { base: '.' })
         //.pipe(filelog())
