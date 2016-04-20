@@ -15,15 +15,15 @@ var filelog = require('gulp-filelog');
 var tsProject = ts.createProject('./tsconfig.json');
 
 gulp.task('build', function () {
-    return gulp.src('./app/**/*.ts', { base: '.' })
-        //.pipe(filelog())
+    return gulp.src(['./test/**/*.ts', './app/**/*.ts'], { base: '.' })
+        .pipe(filelog())
         .pipe(sourcemaps.init())
         .pipe(ts(tsProject))
         .pipe(sourcemaps.write()) // Now the sourcemaps are added to the .js file
         .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('pre-test', function () {
+gulp.task('pre-test', ['build'], function () {
     return gulp.src(['./dist/app/**/*.js'])
         //.pipe(filelog())
         // Covering files
@@ -34,11 +34,11 @@ gulp.task('pre-test', function () {
 
 gulp.task('test', ['pre-test'], function () {
     //find test code - note use of 'base'
-    return gulp.src(['./test/**/*.ts'], { base: '.' })
+    return gulp.src(['./dist/test/**/*.js'], { base: '.' })
         // Transpile
-        .pipe(ts(tsProject))
+        //.pipe(ts(tsProject))
         // Flush to disk
-        .pipe(gulp.dest('./dist'))
+        //.pipe(gulp.dest('./dist'))
         // Execute tests
         .pipe(mocha({ reporter: 'progress' }))
         // Create the reports after tests ran
@@ -68,4 +68,3 @@ gulp.task('watch', function () {
 
 /* single command to hook into VS Code */
 gulp.task('default', ['watch']);
-//gulp.task('default', ['build','test']);
