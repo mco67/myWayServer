@@ -19,7 +19,7 @@ export class AuthServiceImpl implements AuthService {
     }  
  
     public getVersion(req: Request, res: Response, next: NextFunction) : any {
-	    res.status(200).send("Yes men").end();  
+	    res.status(200).send("Yes men") //.end();  
     }  
          
 } 

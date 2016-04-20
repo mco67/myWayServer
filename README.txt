@@ -16,3 +16,4 @@ sudo typings install body-parser --ambient --save
 sudo typings install mocha --ambient --save
 sudo typings install chai --ambient --save
 sudo typings install passport --ambient --save
+sudo typings install sinon --ambient --save

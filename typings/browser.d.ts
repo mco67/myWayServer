@@ -12,3 +12,4 @@
 /// <reference path="browser/ambient/passport-strategy/index.d.ts" />
 /// <reference path="browser/ambient/passport/index.d.ts" />
 /// <reference path="browser/ambient/serve-static/index.d.ts" />
+/// <reference path="browser/ambient/sinon/index.d.ts" />

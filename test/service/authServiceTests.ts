@@ -2,11 +2,12 @@
 
 import "reflect-metadata";
 import { Kernel } from "inversify";
-import { Express, Request, Response, NextFunction } from "express";
+import { Express, Request, Response, NextFunction, Send } from "express";
 import { AuthService, AuthServiceImpl } from "../../app/services/authService";
 import { HttpService } from "../../app/services/httpService";
 import { injectable, inject } from "inversify";
-import { expect } from 'chai';
+import { expect, assert } from 'chai';
+import { stub } from 'sinon';
 
 @injectable()
 class HttpServiceMock implements HttpService {
@@ -28,18 +29,25 @@ describe('AuthenticationService', function() {
         kernel.bind<HttpService>("HttpService").to(HttpServiceMock).inSingletonScope();
         var authService = kernel.get<AuthService>("AuthService");
         
-        // ARRANGE        
-        let req : Request;
-        let resp : Response;
-        let next: NextFunction; 
        
-          
+        // ARRANGE        
+        let req : Request = <Request> {};
+        let next: NextFunction = <NextFunction> {};
+           
+        let resp : Response = <Response> {};
+        resp.status = (code: number) : Response => { return resp; };
+        resp.send = (body: any) : Response => { return resp; }
+                
+        var astub = stub(resp, "send");        
+                
+                
         // ACT
-        //authService.getVersion(req, resp, next); 
+        authService.getVersion(req, resp, next); 
         
         // ASSERT
-        //expect(resp.json).to.be.equals("Yes men"); 
-              
+        assert(astub.calledOnce);
+        assert(astub.calledWith("Yes men"), "astub.calledWith('Yes men')");  
+  
     });
   });
 }); 
