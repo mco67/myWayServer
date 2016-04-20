@@ -3,7 +3,7 @@ node_js:
   - "5.1"
 before_script:
   - npm install -g gulp
-script: gulp test
+script: gulp build test
 notifications:
   email:
     - cordebard@gmail.com
