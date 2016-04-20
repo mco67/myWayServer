@@ -4,3 +4,7 @@ node_js:
 before_script:
   - npm install -g gulp
 script: gulp test
+notifications:
+  email:
+    - cordebard@gmail.com
+    - gillazar67@gmail.com
