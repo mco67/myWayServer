@@ -32,15 +32,10 @@ describe('AuthenticationService', function() {
         let req : Request;
         let resp : Response;
         let next: NextFunction; 
-        resp = {
-            status: (aa) => { return this; }, 
-            send: (aa) => { return this; },
-            end: () => {}
-        }  
-         
-        
+       
+          
         // ACT
-        authService.getVersion(req, resp, next); 
+        //authService.getVersion(req, resp, next); 
         
         // ASSERT
         //expect(resp.json).to.be.equals("Yes men"); 

@@ -4,6 +4,7 @@
 /// <reference path="../node_modules/reflect-metadata/reflect-metadata.d.ts" />
 /// <reference path="../typings/main/ambient/express-serve-static-core/index.d.ts" />
 /// <reference path="../typings/main/ambient/express/index.d.ts" />
+/// <reference path="../typings/main/ambient/passport/index.d.ts" />
 /// <reference path="../typings/main/ambient/mime/index.d.ts" />
 /// <reference path="../typings/main/ambient/serve-static/index.d.ts" />
 /// <reference path="../typings/main/ambient/node/index.d.ts" />
