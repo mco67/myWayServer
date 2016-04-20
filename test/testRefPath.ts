@@ -1,4 +1,5 @@
 /// <reference path="../typings/main/ambient/mocha/index.d.ts" />
+/// <reference path="../typings/main/ambient/chai/index.d.ts" />
 /// <reference path="../node_modules/inversify/type_definitions/inversify/inversify.d.ts" />
 /// <reference path="../node_modules/reflect-metadata/reflect-metadata.d.ts" />
 /// <reference path="../typings/main/ambient/express-serve-static-core/index.d.ts" />

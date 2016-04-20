@@ -11,6 +11,6 @@ export class ConfigServiceImpl implements ConfigService {
     public config : any;
     
     constructor() {
-        this.config = JSON.parse(fs.readFileSync('../app/config/config.json', 'utf8'));
+        this.config = JSON.parse(fs.readFileSync('../../app/config/config.json', 'utf8'));
     }
 } 

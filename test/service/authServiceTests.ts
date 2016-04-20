@@ -6,6 +6,7 @@ import { Express, Request, Response, NextFunction } from "express";
 import { AuthService, AuthServiceImpl } from "../../app/services/authService";
 import { HttpService } from "../../app/services/httpService";
 import { injectable, inject } from "inversify";
+import { expect } from 'chai';
 
 @injectable()
 class HttpServiceMock implements HttpService {
@@ -30,13 +31,19 @@ describe('AuthenticationService', function() {
         // ARRANGE        
         let req : Request;
         let resp : Response;
-        let next: NextFunction;
+        let next: NextFunction; 
+        resp = {
+            status: (aa) => { return this; }, 
+            send: (aa) => { return this; },
+            end: () => {}
+        }  
+         
         
         // ACT
-        authService.getVersion(req, resp, next);
+        authService.getVersion(req, resp, next); 
         
         // ASSERT
-         
+        //expect(resp.json).to.be.equals("Yes men"); 
               
     });
   });
