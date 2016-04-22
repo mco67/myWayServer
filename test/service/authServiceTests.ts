@@ -16,7 +16,6 @@ class HttpServiceMock implements HttpService {
     }
     
     public addGetRoute() {
-        console.log("cocuo s"); 
     }
 }
 
