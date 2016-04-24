@@ -1,5 +1,5 @@
 import { injectable, inject } from "inversify";
-import { HttpService } from "./httpService";
+import { HttpService } from "./common/httpService";
 import { Express, Request, Response, NextFunction } from "express";
 
 export interface AuthService {

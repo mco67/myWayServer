@@ -1,7 +1,11 @@
 {
     "http": { 
 		"port": 8080,
-		"allowedOrigins": [ "http://localhost:8100", "https://localhost:80"]
+		"allowedOrigins": [ "http://localhost:8100", "https://localhost:80"],
+		"secret": "yaselihama"
 	},
-    "secret": "yaselihama"
+	
+	"db": {
+		"url" : "mongodb://localhost:27017/myWay"
+	}
 }

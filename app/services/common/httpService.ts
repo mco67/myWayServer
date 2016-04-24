@@ -14,6 +14,8 @@ var BasicStrategy = require('passport-http').BasicStrategy;
 export interface HttpService {
     startRestServer(): Promise<{}>;
     addGetRoute(path: string, ...handler: RequestHandler[]);
+    addPostRoute(path: string, ...handler: RequestHandler[]);
+    addDeleteRoute(path: string, ...handler: RequestHandler[]);
 }
 
 
@@ -86,6 +88,14 @@ export class HttpServiceImpl implements HttpService {
 
     public addGetRoute(path: string, ...handler: RequestHandler[]) {
         this.express.get(path, ...handler);
+    }
+    
+    public addPostRoute(path: string, ...handler: RequestHandler[]) {
+        this.express.post(path, ...handler);
+    }
+    
+    public addDeleteRoute(path: string, ...handler: RequestHandler[]) {
+        this.express.delete(path, ...handler);
     }
 
 } 
