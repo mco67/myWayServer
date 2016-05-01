@@ -1,7 +1,8 @@
 import { injectable, inject } from "inversify";
 import { HttpService } from './common/httpService';
 import { Express, Request, Response, NextFunction } from "express";
-import { User } from "../models/user";
+import { User, UserSchema } from "../models/user";
+
 
 export interface UserService {
     start(): void;
@@ -14,25 +15,29 @@ export interface UserService {
 
 @injectable()
 export class UserServiceImpl implements UserService {
- 
-    constructor(@inject("HttpService") private httpService: HttpService) {}
+
+    constructor( @inject("HttpService") private httpService: HttpService) { }
 
     public start(): void {
         console.log("[USERSERVICE] -- Attach users routes");
 
-        // Add userService routes  
-        this.httpService.addGetRoute('/api/v1.0/users', this.getUsers);
-        this.httpService.addGetRoute('/api/v1.0/users/:id', this.getUser);
-        
-        // Add userService admin routes  
-        this.httpService.addPostRoute('/api/v1.0/admin/users', this.createUser);
-        this.httpService.addDeleteRoute('/api/v1.0/admin/users/:id', this.deleteUser);
+        this.createSuperadmin()
+            .then(() => {
+                // Add userService routes  
+                this.httpService.addGetRoute('/api/v1.0/users', this.getUsers);
+                this.httpService.addGetRoute('/api/v1.0/users/:id', this.getUser);
+
+                // Add userService admin routes  
+                this.httpService.addPostRoute('/api/v1.0/admin/users', this.createUser);
+                this.httpService.addDeleteRoute('/api/v1.0/admin/users/:id', this.deleteUser);
+            })
     }
 
     public createUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         // Create the user object
         let user = new User({
             login: req.body.login,
+            password: req.body.password,
             email: req.body.email,
             phone: req.body.phone,
             firstname: req.body.firstname,
@@ -120,5 +125,35 @@ export class UserServiceImpl implements UserService {
             });
         });
     }
+
+    private createSuperadmin = function () {
+        return new Promise((resolve, reject) => {
+            this.getUserInDB({ login: 'superadmin' })
+                .then((user) => {
+                    if (user) {
+                        console.info("[USERSERVICE] -- Superadmin already created");
+                        resolve(user);
+                    }
+                    else {
+                        let user = new User({ "login": "superadmin", "password": "ert" });
+                        return this.saveUserInDB(user)
+                            .then((user) => {
+                                console.info("[USERSERVICE] -- Superadmin successfully created");
+                                resolve(user);
+                            });
+                    }
+                })
+                .catch((error) => {
+                    var errorMessage = `Superadmin creation failure ${error}`;
+                    console.info(`[USERSERVICE] -- ${errorMessage}`);
+                    reject(new Error(errorMessage));
+                });
+        });
+    }
+    /*
+    user.verifyPassword('ert', function(err, valid) {
+                        if (!err)
+                            console.log(valid ? "ValidAsync" : "InvalidAsync");
+                        });*/
 
 } 

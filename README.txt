@@ -17,3 +17,4 @@ sudo typings install mocha --ambient --save
 sudo typings install chai --ambient --save
 sudo typings install passport --ambient --save
 sudo typings install sinon --ambient --save
+sudo typings install bcrypt --ambient --save

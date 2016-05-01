@@ -35,7 +35,7 @@ describe('UserServiceTestSuite', function () {
             resp.send = (body: any) : Response => { return resp; }
             
             // ACT
-            userService.getUser(req, resp, next);
+            userService.getUser(req, resp, next); 
             
             // ASSERT
             

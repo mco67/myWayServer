@@ -12,8 +12,10 @@ export class DBServiceImpl implements DBService {
     private mongoose : mongoose.Mongoose;  
        
     constructor(@inject("ConfigService") private configService: ConfigService) {
-        console.log('[DBSERVICE]   -- Configure Database');  
         this.mongoose = mongoose;
-        this.mongoose.connect(configService.config.db.url);        
+        this.mongoose.connect(configService.config.db.url, function(error) {
+            if (error) console.log(`[DBSERVICE]   -- Connection to database failure : ${error}`);
+            else console.log('[DBSERVICE]   -- Connection to database success');
+        });        
     } 
 }  

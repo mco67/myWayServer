@@ -1,3 +1,4 @@
+/// <reference path="main/ambient/bcrypt/index.d.ts" />
 /// <reference path="main/ambient/body-parser/index.d.ts" />
 /// <reference path="main/ambient/chai/index.d.ts" />
 /// <reference path="main/ambient/es6-promise/index.d.ts" />

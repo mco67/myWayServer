@@ -34,11 +34,11 @@ gulp.task('pre-test', ['build'], function () {
 
 gulp.task('test', ['pre-test'], function () {
     //find test code - note use of 'base'
-    return gulp.src(['./dist/test/**/*.js'], { base: '.' })
+    return gulp.src(['./test/**/*.ts'], { base: '.' })
         // Transpile
-        //.pipe(ts(tsProject))
+        .pipe(ts(tsProject))
         // Flush to disk
-        //.pipe(gulp.dest('./dist'))
+        .pipe(gulp.dest('./dist'))
         // Execute tests
         .pipe(mocha({ reporter: 'progress' }))
         // Create the reports after tests ran
@@ -68,3 +68,4 @@ gulp.task('watch', function () {
 
 /* single command to hook into VS Code */
 gulp.task('default', ['watch']);
+gulp.task('tests', ['test', 'remap-istanbul']);

@@ -10,4 +10,6 @@
 /// <reference path="../typings/main/ambient/node/index.d.ts" />
 /// <reference path="../typings/main/ambient/morgan/index.d.ts" />
 /// <reference path="../typings/main/ambient/body-parser/index.d.ts" />  
-/// <reference path="../typings/main/ambient/sinon/index.d.ts" />  
+/// <reference path="../typings/main/ambient/sinon/index.d.ts" /> 
+/// <reference path="../typings/main/ambient/mongoose/index.d.ts"/>
+ 
