@@ -131,6 +131,10 @@ export class UserServiceImpl implements UserService {
             this.getUserInDB({ login: 'superadmin' })
                 .then((user) => {
                     if (user) {
+                        /* user.verifyPassword('ert', function(err, valid) {
+                        if (!err)
+                            console.log(valid ? "ValidAsync" : "InvalidAsync");
+                        });*/
                         console.info("[USERSERVICE] -- Superadmin already created");
                         resolve(user);
                     }
@@ -150,10 +154,7 @@ export class UserServiceImpl implements UserService {
                 });
         });
     }
-    /*
-    user.verifyPassword('ert', function(err, valid) {
-                        if (!err)
-                            console.log(valid ? "ValidAsync" : "InvalidAsync");
-                        });*/
+    
+   
 
 } 

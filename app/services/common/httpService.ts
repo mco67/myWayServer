@@ -3,18 +3,27 @@ import { ConfigService } from "./configService";
 import { DBService } from "./dbService";
 import { Express, RequestHandler } from "express";
 import { Passport, Strategy } from "passport";
+import { User, UserSchema } from "../../models/user";
+
 import * as express from "express";
 import * as morgan from "morgan";
 import * as bodyParser from "body-parser";
 import * as http from "http";
+import * as jwt from "jwt-simple";
+
 
 // No typings for the followings modules
 var BasicStrategy = require('passport-http').BasicStrategy;
 
 export interface HttpService {
+    
+    passport : Passport;
     startRestServer(): Promise<{}>;
+    encodeToken(login: string): string;
+    
     addGetRoute(path: string, ...handler: RequestHandler[]);
     addPostRoute(path: string, ...handler: RequestHandler[]);
+    addOptionsRoute(path: string, ...handler: RequestHandler[]);
     addDeleteRoute(path: string, ...handler: RequestHandler[]);
 }
 
@@ -23,15 +32,17 @@ export interface HttpService {
 export class HttpServiceImpl implements HttpService {
 
     private express: Express;
-    private passport: Passport;
-
+    public passport: Passport;
+    public tokenSecret : string;
+    
     constructor(
         @inject("ConfigService") private configService: ConfigService,
         @inject("DBService") private dbService: DBService) {
-            this.configureExpress();
-            this.configurePassportBasicAuth();
-            this.configureCors();
-        }
+        this.tokenSecret = "YaSeli67";
+        this.configureExpress();
+        this.configurePassportBasicAuth();
+        this.configureCors();
+    }
 
     public startRestServer(): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -41,6 +52,11 @@ export class HttpServiceImpl implements HttpService {
             });
         });
     }
+    
+    public encodeToken(login: string): string {
+        console.log(`[HTTPSERVICE] -- Encode auth token for user ${login}`);
+        return jwt.encode({ username: login }, this.tokenSecret);
+    }
 
     private configureExpress(): void {
         console.info("[HTTPSERVICE] -- Configure express framework");
@@ -48,7 +64,7 @@ export class HttpServiceImpl implements HttpService {
         // Configure Express framework
         this.express = express();
         this.express.set('port', this.configService.config.http.port);
-        this.express.use(morgan('logger'));
+        this.express.use(morgan('common'));
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: true }));
 
@@ -75,25 +91,39 @@ export class HttpServiceImpl implements HttpService {
     private configurePassportBasicAuth(): void {
 
         console.info("[HTTPSERVICE] -- Configure passport basicAuth strategy");
-        let basicStrategy: Strategy = new BasicStrategy((phone, token, done) => {
+        let basicStrategy: Strategy = new BasicStrategy((username, password, done) => {
             try {
-                return done(false, null);
+                User.findOne({ login: username }, (err, user) => {
+                    if (user) {
+                        user.verifyPassword(password, (err, valid) => {
+                            if (err || !valid) { return done('wrongPassword', null); }
+                            return done(false, user);
+                        });
+                    }
+                    else { return done("wrongUser", null); }	
+                });
             }
             catch (err) {
-                console.error('[HTTPSERVICE] -- Passport BasicStrategy error " + error.message')
+                console.error('[HTTPSERVICE] -- Passport BasicStrategy error " + err.message');
+                return done(false, null);
             }
         });
         this.passport.use(basicStrategy);
     }
 
+   
     public addGetRoute(path: string, ...handler: RequestHandler[]) {
         this.express.get(path, ...handler);
     }
-    
+
     public addPostRoute(path: string, ...handler: RequestHandler[]) {
         this.express.post(path, ...handler);
     }
-    
+
+    public addOptionsRoute(path: string, ...handler: RequestHandler[]) {
+        this.express.options(path, ...handler);
+    }
+
     public addDeleteRoute(path: string, ...handler: RequestHandler[]) {
         this.express.delete(path, ...handler);
     }

@@ -9,6 +9,8 @@ export interface IUser extends Document {
   lastname: string;
   created: Date;
   updated: Date;
+  
+  verifyPassword(password :string, handler: any);
 }
 
 export const UserSchema: Schema = new Schema({

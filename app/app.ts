@@ -12,6 +12,7 @@
 /// <reference path="../typings/main/ambient/body-parser/index.d.ts" />
 /// <reference path="../typings/main/ambient/mongoose/index.d.ts"/>
 /// <reference path="../typings/main/ambient/bcrypt/index.d.ts"/>
+/// <reference path="../typings/main/ambient/jwt-simple/index.d.ts"/>
 
 import { Main } from "./main";
 import injector from "./inversify.config";

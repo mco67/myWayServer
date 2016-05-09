@@ -4,6 +4,7 @@
 /// <reference path="browser/ambient/es6-promise/index.d.ts" />
 /// <reference path="browser/ambient/express-serve-static-core/index.d.ts" />
 /// <reference path="browser/ambient/express/index.d.ts" />
+/// <reference path="browser/ambient/jwt-simple/index.d.ts" />
 /// <reference path="browser/ambient/mime/index.d.ts" />
 /// <reference path="browser/ambient/mocha/index.d.ts" />
 /// <reference path="browser/ambient/mongoose/index.d.ts" />
