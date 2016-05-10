@@ -30,6 +30,8 @@ export class AuthServiceImpl implements AuthService {
         this.httpService.passport.authenticate('basic', (err, user) => {            
             if (err) return res.status(401).json({ message: err });
             let token = this.httpService.encodeToken(user.login);
+            user.password='';
+            delete user.pasword;
             res.status(200).json({ token : token, user: user });
         })(req, res, next);
     }  

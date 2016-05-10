@@ -29,13 +29,12 @@ describe('UserServiceTestSuite', function () {
             let req : Request = <Request> {};
             req.params = {'id' : 'toto'};
             
-            let next: NextFunction = <NextFunction> {};
             let resp : Response = <Response> {};
             resp.status = (code: number) : Response => { return resp; };
             resp.send = (body: any) : Response => { return resp; }
             
             // ACT
-            userService.getUser(req, resp, next); 
+            userService.getOwnUser(req, resp); 
             
             // ASSERT
             

@@ -7,8 +7,8 @@ import { User, UserSchema } from "../models/user";
 export interface UserService {
     start(): void;
 
+    getOwnUser(req: Request, res: Response, next: NextFunction): any;
     createUser(req: Request, res: Response, next: NextFunction): Promise<any>;
-    getUser(req: Request, res: Response, next: NextFunction): Promise<any>;
     getUsers(req: Request, res: Response, next: NextFunction): Promise<Array<any>>;
     deleteUser(req: Request, res: Response, next: NextFunction): Promise<any>;
 }
@@ -19,18 +19,24 @@ export class UserServiceImpl implements UserService {
     constructor( @inject("HttpService") private httpService: HttpService) { }
 
     public start(): void {
-        console.log("[USERSERVICE] -- Attach users routes");
+        console.log("[USERSERVICE] -- Attach users routes "+this.httpService.passport);
 
         this.createSuperadmin()
             .then(() => {
                 // Add userService routes  
-                this.httpService.addGetRoute('/api/v1.0/users', this.getUsers);
-                this.httpService.addGetRoute('/api/v1.0/users/:id', this.getUser);
+                this.httpService.addOptionsRoute('/api/v1.0/user/user', this.userPreFlight);
+                this.httpService.addGetRoute('/api/v1.0/user/user', this.httpService.passport.authenticate('bearer', { session: false }), (req: Request, res: Response, next: NextFunction) => { this.getOwnUser(req, res, next); });
 
                 // Add userService admin routes  
+                this.httpService.addGetRoute('/api/v1.0/admin/users', this.getUsers);
                 this.httpService.addPostRoute('/api/v1.0/admin/users', this.createUser);
                 this.httpService.addDeleteRoute('/api/v1.0/admin/users/:id', this.deleteUser);
             })
+    }
+
+     public userPreFlight(req: Request, res: Response, next: NextFunction) : any {
+	    console.log("[USER_SERVICE] /api/v1.0/user/user : doing preflight");
+	    res.status(204).end();
     }
 
     public createUser(req: Request, res: Response, next: NextFunction): Promise<any> {
@@ -52,9 +58,25 @@ export class UserServiceImpl implements UserService {
         return this.getUsersInDB();
     }
 
-    public getUser(req: Request, res: Response, next: NextFunction): Promise<any> {
-        return this.getUserInDB(req.params.id);
+    public getOwnUser(req: Request, res: Response, next: NextFunction): void {
+        let user = req.user;
+        user.password='****';
+        res.status(200).json({"data": user});
     }
+        
+    /*    this.getUserInDB("superadmin", 'login email phone firstname lastname')
+        .then((user) => {
+            if (user) { res.status(200).json({"data": user}); }
+            else {
+                var error = this.httpService.forgeErrorMessage('404', 'Resource not found', `User with id ${req.params.id} does not exist`, '000');
+                res.status(404).json(error).end();
+            }
+        })
+        .catch((error) => {
+            var error = this.httpService.forgeErrorMessage('500', 'Internal server error', error, '000');
+            res.status(500).json(error).end();
+        });
+    }*/
 
     public deleteUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         return this.removeUserInDB(req.params.id);
