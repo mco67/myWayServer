@@ -2,42 +2,72 @@ import { injectable, inject } from "inversify";
 import { HttpService } from './common/httpService';
 import { Express, Request, Response, NextFunction } from "express";
 import { User, UserSchema } from "../models/user";
-
+import * as multer from "multer";
 
 export interface UserService {
-    start(): void;
 
-    getOwnUser(req: Request, res: Response, next: NextFunction): any;
-    createUser(req: Request, res: Response, next: NextFunction): Promise<any>;
-    getUsers(req: Request, res: Response, next: NextFunction): Promise<Array<any>>;
-    deleteUser(req: Request, res: Response, next: NextFunction): Promise<any>;
 }
 
 @injectable()
 export class UserServiceImpl implements UserService {
 
-    constructor( @inject("HttpService") private httpService: HttpService) { }
+    private avatarUploader : any;
 
-    public start(): void {
-        console.log("[USERSERVICE] -- Attach users routes "+this.httpService.passport);
-
+    constructor( @inject("HttpService") private httpService: HttpService) {
+        console.log("[USERSERVICE] -- Attach users routes");
+ 
+        // Create the avatar uploader
+        this.avatarUploader = this.createAvatarUploader();
+    
+        // Create superadmin user if necessary
         this.createSuperadmin()
             .then(() => {
+                
                 // Add userService routes  
                 this.httpService.addOptionsRoute('/api/v1.0/user/user', this.userPreFlight);
-                this.httpService.addGetRoute('/api/v1.0/user/user', this.httpService.passport.authenticate('bearer', { session: false }), (req: Request, res: Response, next: NextFunction) => { this.getOwnUser(req, res, next); });
+                this.httpService.addGetRoute('/api/v1.0/user/user', 
+                    this.httpService.passport.authenticate('bearer', { session: false }), 
+                    (req: Request, res: Response, next: NextFunction) => { this.getOwnUser(req, res, next); 
+                });
 
+                this.httpService.addPostRoute('/api/v1.0/user/avatar', 
+                    this.httpService.passport.authenticate('bearer', { session: false }), 
+                    this.avatarUploader.single("file"), 
+                    (req: Request, res: Response, next: NextFunction) => { res.send(req.files); } 
+                );
+   
                 // Add userService admin routes  
-                this.httpService.addGetRoute('/api/v1.0/admin/users', this.getUsers);
-                this.httpService.addPostRoute('/api/v1.0/admin/users', this.createUser);
-                this.httpService.addDeleteRoute('/api/v1.0/admin/users/:id', this.deleteUser);
+                //this.httpService.addGetRoute('/api/v1.0/admin/users', this.getUsers);
+                //this.httpService.addPostRoute('/api/v1.0/admin/users', this.createUser);
+                //this.httpService.addDeleteRoute('/api/v1.0/admin/users/:id', this.deleteUser);
             })
     }
 
-     public userPreFlight(req: Request, res: Response, next: NextFunction) : any {
-	    console.log("[USER_SERVICE] /api/v1.0/user/user : doing preflight");
-	    res.status(204).end();
+    private userPreFlight(req: Request, res: Response, next: NextFunction): any {
+        console.log("[USER_SERVICE] /api/v1.0/user/user : doing preflight");
+        res.status(204).end();
     }
+    
+    private getOwnUser(req: Request, res: Response, next: NextFunction): void {
+        let user = req.user;
+        user.password = '****';
+        res.status(200).json({ "data": user });
+    }
+
+    private createAvatarUploader(): any {
+        let storage = multer.diskStorage({
+            destination: function (req, file, cb) { cb(null, `./avatars/`); },
+            filename: function (req, file, cb) { cb(null, `${req['user']['_id']}`); }
+        });
+        return multer({ storage: storage });
+    }
+
+
+
+
+
+
+
 
     public createUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         // Create the user object
@@ -53,30 +83,9 @@ export class UserServiceImpl implements UserService {
         // Save user in DB
         return this.saveUserInDB(user);
     }
-
     public getUsers(req: Request, res: Response, next: NextFunction): Promise<Array<any>> {
         return this.getUsersInDB();
     }
-
-    public getOwnUser(req: Request, res: Response, next: NextFunction): void {
-        let user = req.user;
-        user.password='****';
-        res.status(200).json({"data": user});
-    }
-        
-    /*    this.getUserInDB("superadmin", 'login email phone firstname lastname')
-        .then((user) => {
-            if (user) { res.status(200).json({"data": user}); }
-            else {
-                var error = this.httpService.forgeErrorMessage('404', 'Resource not found', `User with id ${req.params.id} does not exist`, '000');
-                res.status(404).json(error).end();
-            }
-        })
-        .catch((error) => {
-            var error = this.httpService.forgeErrorMessage('500', 'Internal server error', error, '000');
-            res.status(500).json(error).end();
-        });
-    }*/
 
     public deleteUser(req: Request, res: Response, next: NextFunction): Promise<any> {
         return this.removeUserInDB(req.params.id);
@@ -176,7 +185,7 @@ export class UserServiceImpl implements UserService {
                 });
         });
     }
-    
-   
+
+
 
 } 

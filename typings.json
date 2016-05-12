@@ -11,6 +11,7 @@
     "mocha": "registry:dt/mocha#2.2.5+20160317120654",
     "mongoose": "registry:dt/mongoose#3.8.5+20160316155526",
     "morgan": "registry:dt/morgan#1.2.2+20160317120654",
+    "multer": "registry:dt/multer#0.0.0+20160317120654",
     "node": "registry:dt/node#4.0.0+20160330064709",
     "orchestrator": "registry:dt/orchestrator#0.0.0+20160316155526",
     "passport": "registry:dt/passport#0.2.0+20160317120654",

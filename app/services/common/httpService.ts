@@ -15,13 +15,15 @@ import * as jwt from "jwt-simple";
 var BasicStrategy = require('passport-http').BasicStrategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 
+
 export interface HttpService {
 
     passport: Passport;
+
     startRestServer(): Promise<{}>;
     encodeToken(login: string): string;
     forgeErrorMessage(errCode: string, errMsg: string, errDetails: string, errDetailsCode: string): any;
-    
+
     addGetRoute(path: string, ...handler: RequestHandler[]);
     addPostRoute(path: string, ...handler: RequestHandler[]);
     addOptionsRoute(path: string, ...handler: RequestHandler[]);
@@ -70,13 +72,16 @@ export class HttpServiceImpl implements HttpService {
         this.express.use(bodyParser.json());
         this.express.use(bodyParser.urlencoded({ extended: true }));
 
+        // Serve static files
+        this.express.use('/avatars', express.static('avatars'));
+
         // Attach Password framework
         this.passport = require('passport');
         this.express.use(this.passport.initialize());
     }
 
     private configureCors(): void {
-        console.info("[HTTPSERVICE] -- Enable CORS");
+        console.info("[HTTPSERVICE] -- Configure CORS");
         var allowedOrigins = this.configService.config.http.allowedOrigins;
         this.express.use((req, res, next) => {
             // Check request origin and configure Access-Control-Allow-* headers
@@ -136,7 +141,6 @@ export class HttpServiceImpl implements HttpService {
         });
         this.passport.use(bearerStrategy);
     }
-
 
     public addGetRoute(path: string, ...handler: RequestHandler[]) {
         this.express.get(path, ...handler);

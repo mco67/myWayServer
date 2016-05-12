@@ -9,6 +9,7 @@
 /// <reference path="main/ambient/mocha/index.d.ts" />
 /// <reference path="main/ambient/mongoose/index.d.ts" />
 /// <reference path="main/ambient/morgan/index.d.ts" />
+/// <reference path="main/ambient/multer/index.d.ts" />
 /// <reference path="main/ambient/node/index.d.ts" />
 /// <reference path="main/ambient/orchestrator/index.d.ts" />
 /// <reference path="main/ambient/passport-http-bearer/index.d.ts" />

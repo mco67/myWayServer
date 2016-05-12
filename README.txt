@@ -19,3 +19,4 @@ sudo typings install passport --ambient --save
 sudo typings install sinon --ambient --save
 sudo typings install bcrypt --ambient --save
 sudo typings install jwt-simple --ambient --save
+sudo typings install multer --ambient --save

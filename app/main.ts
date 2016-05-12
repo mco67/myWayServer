@@ -14,12 +14,9 @@ export class MainImpl implements Main {
     public constructor(
         @inject("HttpService") private httpService: HttpService,
         @inject("UserService") private userService: UserService,
-        @inject("AuthService") private authService: AuthService) {
-    }
-
+        @inject("AuthService") private authService: AuthService) {}
+ 
     public start(): void { 
-        // Start services
-        this.userService.start();           
         this.httpService.startRestServer();
     }
 }
