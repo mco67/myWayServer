@@ -23,6 +23,7 @@ export interface HttpService {
     startRestServer(): Promise<{}>;
     encodeToken(login: string): string;
     forgeErrorMessage(errCode: string, errMsg: string, errDetails: string, errDetailsCode: string): any;
+    needsRight(right: string): any;
 
     addGetRoute(path: string, ...handler: RequestHandler[]);
     addPostRoute(path: string, ...handler: RequestHandler[]);
@@ -140,6 +141,16 @@ export class HttpServiceImpl implements HttpService {
             }
         });
         this.passport.use(bearerStrategy);
+    }
+
+    public needsRight(right: string) {
+        return [
+            this.passport.authenticate('bearer', { session: false }),
+            (req, res, next) => {
+                if (req.user && req.user.rights.indexOf(right) !== -1) { next(); }
+                else { res.send(401, 'Unauthorized'); }
+            }
+        ];
     }
 
     public addGetRoute(path: string, ...handler: RequestHandler[]) {

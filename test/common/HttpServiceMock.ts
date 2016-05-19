@@ -19,4 +19,5 @@ export class HttpServiceMock implements HttpService {
     public addOptionsRoute() {};
     public addDeleteRoute() {};
     public forgeErrorMessage(errCode: string, errMsg: string, errDetails: string, errDetailsCode: string): any {};
+    public needsRight(rights: string) {};
 }

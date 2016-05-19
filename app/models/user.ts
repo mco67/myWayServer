@@ -35,6 +35,10 @@ export const UserSchema: Schema = new Schema({
     type: String,
     require: true
   },
+  rights:{
+    type: [String],
+    require: true
+  },
   created: {
     type: Date,
     default: Date.now
@@ -53,5 +57,8 @@ UserSchema.plugin(require('mongoose-bcrypt'));
   next();
 });*/
 
-export const User = model<IUser>('User', UserSchema);
 
+export const User = model<IUser>('User', UserSchema);
+export const USER_ROLE = "user";
+export const USER_ADMIN = "admin";
+export const USER_SUPERADMIN = "superadmin";

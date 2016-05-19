@@ -162,15 +162,11 @@ export class UserServiceImpl implements UserService {
             this.getUserInDB({ login: 'superadmin' })
                 .then((user) => {
                     if (user) {
-                        /* user.verifyPassword('ert', function(err, valid) {
-                        if (!err)
-                            console.log(valid ? "ValidAsync" : "InvalidAsync");
-                        });*/
                         console.info("[USERSERVICE] -- Superadmin already created");
                         resolve(user);
                     }
                     else {
-                        let user = new User({ "login": "superadmin", "password": "ert" });
+                        let user = new User({ "login": "superadmin", "password": "ert", rights:["user", "superadmin"] });
                         return this.saveUserInDB(user)
                             .then((user) => {
                                 console.info("[USERSERVICE] -- Superadmin successfully created");

@@ -9,6 +9,7 @@ import { DBService, DBServiceImpl } from "./services/common/dbService";
 
 import { AuthService, AuthServiceImpl } from "./services/authService";
 import { UserService, UserServiceImpl } from "./services/userService";
+import { ProviderService, ProviderServiceImpl } from "./services/providerService";
 
 // Create and configure application injector
 var injector = new Kernel();
@@ -20,5 +21,6 @@ injector.bind<DBService>("DBService").to(DBServiceImpl).inSingletonScope();
 
 injector.bind<AuthService>("AuthService").to(AuthServiceImpl).inSingletonScope(); 
 injector.bind<UserService>("UserService").to(UserServiceImpl).inSingletonScope(); 
+injector.bind<ProviderService>("ProviderService").to(ProviderServiceImpl).inSingletonScope(); 
 
 export default injector;
