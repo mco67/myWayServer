@@ -20,7 +20,10 @@ export class ProviderServiceImpl implements ProviderService {
     }
     
     private getProviders(req: Request, res: Response, next: NextFunction): any {
-        res.status(200).json({ "data": ["Ville de Strasbourg", "Commune d'Eschau"] });
+        res.status(200).json({ "data": [
+            {id:'st', name:'Ville de Strasbourg', description:'A Strasbourg à pied'}, 
+            {id:'esc', name:"Commune d'Eschau", description:"eschauuuu"}
+        ]});
     }
     
     
