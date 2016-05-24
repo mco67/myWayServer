@@ -32,5 +32,5 @@ export const ProviderSchema: Schema = new Schema({
   }
 });
 
-export const User = model<IProvider>('Provider', ProviderSchema);
+export const Provider = model<IProvider>('Provider', ProviderSchema);
 
